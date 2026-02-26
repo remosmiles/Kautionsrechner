@@ -3,147 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVZ Uri 2026 | Bussen & Kaution</title>
+    <title>SVZ Uri 2026 | Multi-Kautionsrechner</title>
     <style>
-        :root { --uri-red: #e63946; --uri-dark: #1d3557; --uri-bg: #f1faee; --uri-blue: #457b9d; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--uri-bg); padding: 10px; display: flex; justify-content: center; }
-        .container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-        h1 { color: var(--uri-dark); text-align: center; border-bottom: 3px solid var(--uri-red); padding-bottom: 10px; font-size: 1.2rem; }
-        .section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--uri-blue); }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.85rem; color: var(--uri-dark); }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        :root { --uri-red: #e63946; --uri-dark: #1d3557; --uri-blue: #457b9d; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 10px; }
+        .container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 100%; max-width: 650px; }
+        h1 { color: var(--uri-dark); text-align: center; border-bottom: 3px solid var(--uri-red); padding-bottom: 10px; margin-bottom: 20px; }
+        .search-section { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--uri-blue); }
+        input, select, button { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; margin-top: 5px; }
+        button { background: var(--uri-blue); color: white; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
+        button:hover { background: var(--uri-dark); }
         
-        .db-search { background: #eef2f3; border: 2px solid var(--uri-blue); }
-        
-        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .check-item { background: white; padding: 8px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; border: 1px solid #ddd; }
-        .check-item input { width: auto; margin: 0; }
+        .list-section { margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+        .delikt-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .delikt-item:last-child { border-bottom: none; }
+        .remove-btn { width: auto; padding: 4px 8px; background: #dc3545; font-size: 0.75rem; margin: 0; }
 
-        .result-panel { background: var(--uri-dark); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .total-amount { font-size: 2.8rem; font-weight: bold; color: #a8dadc; display: block; }
-        .details { text-align: left; font-size: 0.85rem; margin-top: 10px; line-height: 1.5; border-top: 1px solid #457b9d; padding-top: 10px; }
-        
-        .info-tag { font-size: 0.7rem; color: #777; text-align: center; margin-top: 10px; }
-        strong { color: #f1faee; }
+        .fee-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .fee-card { background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 4px solid var(--uri-red); }
+
+        .result-panel { background: var(--uri-dark); color: white; padding: 25px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .total-amount { font-size: 3rem; font-weight: bold; color: #a8dadc; display: block; }
+        .footer { font-size: 0.7rem; color: #666; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>⚖️ SVZ Uri: Bussen- & Kautionsrechner</h1>
+    <h1>⚖️ SVZ Uri: Multi-Kautionsrechner</h1>
 
-    <div class="section">
-        <label>1. Delikt suchen (Datenbank 2026)</label>
-        <input type="text" class="db-search" id="dbSearch" list="deliktListe" placeholder="Tippe z.B. Reifen, Gewicht, ARV, Geschwindigkeit..." oninput="selectDelikt()">
-        <datalist id="deliktListe"></datalist>
-        <p id="deliktInfo" style="font-size: 0.8rem; color: var(--uri-blue); margin: 0; font-style: italic;"></p>
+    <div class="search-section">
+        <label>Delikt aus Liste wählen:</label>
+        <input type="text" id="deliktSearch" list="bussenliste" placeholder="Suchen (z.B. Gewicht, Reifen, Bremsen, ARV)...">
+        <datalist id="bussenliste"></datalist>
+        <button onclick="addDelikt()">+ Delikt hinzufügen</button>
     </div>
 
-    <div class="section">
-        <div style="display: flex; gap: 10px;">
-            <div style="flex: 1;">
-                <label>Busse (CHF)</label>
-                <input type="number" id="fineAmount" value="0" oninput="calculate()">
+    <div class="list-section">
+        <label>Aktuelle Delikte am Fahrzeug:</label>
+        <div id="activeList">
             </div>
-            <div style="flex: 1;">
-                <label>TB-Aufnahme</label>
-                <select id="tbAufnahme" onchange="calculate()">
-                    <option value="110">Standard (110.-)</option>
-                    <option value="360">Komplex (360.-)</option>
-                </select>
-            </div>
+    </div>
+
+    <div class="fee-section">
+        <div class="fee-card">
+            <label>TB-Aufnahme</label>
+            <select id="tbType" onchange="render()">
+                <option value="110">Standard (110.-)</option>
+                <option value="360">Komplex (360.-)</option>
+            </select>
         </div>
-    </div>
-
-    <div class="section">
-        <label>Zusatz-Gebühren</label>
-        <div class="checkbox-group">
-            <div class="check-item"><input type="checkbox" id="tko" onchange="calculate()"> TKO (+60.-)</div>
-            <div class="check-item"><input type="checkbox" id="waage" onchange="calculate()"> Waage (+25.-)</div>
-            <div class="check-item"><input type="checkbox" id="video" onchange="calculate()"> Video (+150.-)</div>
+        <div class="fee-card">
+            <label>Optionen</label>
+            <div style="font-size: 0.8rem;">
+                <input type="checkbox" id="waage" onchange="render()"> Waage (+25.-)<br>
+                <input type="checkbox" id="tko" onchange="render()"> TKO (+60.-)<br>
+                <input type="checkbox" id="video" onchange="render()"> Video (+150.-)
+            </div>
         </div>
     </div>
 
     <div class="result-panel">
         <span>Total Kaution (Deposition)</span>
-        <span class="total-amount" id="totalDisplay">0.00</span>
-        
-        <div class="details" id="detailsDisplay">
-            Busse: 0.00 | Gebühr StA: 100.00 | TB: 110.00
-        </div>
+        <span class="total-amount" id="totalVal">CHF 0.00</span>
+        <div id="breakdown" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;"></div>
     </div>
 
-    <p class="info-tag">Basierend auf Richtlinien Stand 12.01.2026[cite: 15]. Gültig ab 01.01.2026[cite: 16].</p>
+    <p class="footer">Strafmassempfehlungen Uri 2026. <br>Bei Kautionen > 5'000.- Staatsanwaltschaft informieren!</p>
 </div>
 
 <script>
-    // Datenbank aus dem PDF (Auszug gängigste SVZ-Fälle)
-    const bussenDB = [
-        { name: "Geschwindigkeit: Innerorts +16-20 km/h", busse: 400, info: "SVG 27/1 [cite: 332]" },
-        { name: "Geschwindigkeit: Ausserorts +21-24 km/h", busse: 400, info: "SVG 27/1 [cite: 332]" },
-        { name: "Gewicht: Überlast bis 100kg (alle Fz)", busse: 100, info: "OBV 300.1.a [cite: 828]" },
-        { name: "Gewicht: Überlast >3.5t bis 5% (max 1000kg)", busse: 250, info: "OBV 300.1.c [cite: 828]" },
-        { name: "Reifen: Mangelhafter Reifen (pro Stück)", busse: 100, info: "OBV 402.1 [cite: 631]" },
-        { name: "Reifen: Gewebe/Karkasse sichtbar (pro Rad)", busse: 500, info: "LW-Ansatz [cite: 631]" },
-        { name: "ARV1: Tägliche Lenkzeit überschritten (pro Std)", busse: 100, info: "ARV1 5/1 [cite: 899, 901]" },
-        { name: "ARV1: Fehlende Ruhezeit (pro Std)", busse: 100, info: "ARV1 9/1 [cite: 935, 944]" },
-        { name: "ARV1: Fahren ohne Einlageblatt/Fahrerkarte", busse: 500, info: "ARV1 14/1 [cite: 975, 979]" },
-        { name: "Technik: Bremsscheibe gerissen (pro Rad)", busse: 500, info: "LW-Ansatz [cite: 624]" },
-        { name: "Technik: Betriebsbremse ohne Funktion (1 Rad)", busse: 1000, info: "LW-Ansatz [cite: 625]" },
-        { name: "Ladung: Ungenügende Sicherung (leicht)", busse: 250, info: "SVG 30/2 [cite: 699, 705]" },
-        { name: "Ladung: Ungenügende Sicherung (großes Gefährdungspat.)", busse: 900, info: "Uri Richtlinie [cite: 705]" },
-        { name: "Nachtfahrverbot missachtet (bis 1 Std)", busse: 100, info: "OBV 332.a [cite: 817]" },
-        { name: "Sonntagsfahrverbot missachtet", busse: 400, info: "VRV 91 [cite: 817]" }
+    // Originaldaten aus dem Dokument 2026
+    const db = [
+        { n: "Gewicht: LW bis 100kg Überlast", b: 100 },
+        { n: "Gewicht: LW > 100kg bis 5% (max 1t)", b: 250 },
+        { n: "Gewicht: LW > 5% oder > 1t (Mindestbusse)", b: 300 },
+        { n: "Achslast: bis 100kg Überlast", b: 100 },
+        { n: "Reifen: Profil unter 1.6mm (pro Reifen)", b: 100 },
+        { n: "Reifen: Gewebe/Karkasse sichtbar (LW)", b: 500 },
+        { n: "Bremse: LW ohne Funktion (pro Rad)", b: 1000 },
+        { n: "Bremse: LW ungenügend < 2/3 (pro Rad)", b: 380 },
+        { n: "Bremse: LW ungenügend > 2/3 (pro Rad)", b: 150 },
+        { n: "ARV1: Lenkzeit überschritten (pro Std)", b: 100 },
+        { n: "ARV1: Ruhezeit unterschritten (pro Std)", b: 100 },
+        { n: "ARV1: Fahren ohne Fahrerkarte/Einlageblatt", b: 500 },
+        { n: "Ladung: Ungenügend gesichert (LW Standard)", b: 250 },
+        { n: "Ladung: Ungenügend gesichert (Gefährdungspot.)", b: 900 },
+        { n: "Nachtfahrverbot (bis 1 Std)", b: 100 },
+        { n: "Sonntagsfahrverbot", b: 400 },
+        { n: "Technik: Bremsscheibe gerissen (LW)", b: 500 },
+        { n: "Technik: Fahrtschreiber Manipulation", b: 1000 }
     ];
 
-    // Liste füllen
-    const dl = document.getElementById('deliktListe');
-    bussenDB.forEach(d => {
+    let cart = [];
+
+    // Liste initialisieren
+    const datalist = document.getElementById('bussenliste');
+    db.forEach(item => {
         let opt = document.createElement('option');
-        opt.value = d.name;
-        dl.appendChild(opt);
+        opt.value = item.n;
+        datalist.appendChild(opt);
     });
 
-    function selectDelikt() {
-        const search = document.getElementById('dbSearch').value;
-        const entry = bussenDB.find(d => d.name === search);
+    function addDelikt() {
+        const val = document.getElementById('deliktSearch').value;
+        const entry = db.find(x => x.n === val);
         if (entry) {
-            document.getElementById('fineAmount').value = entry.busse;
-            document.getElementById('deliktInfo').innerText = "Info: " + entry.info;
-            calculate();
+            cart.push({...entry, id: Date.now()});
+            document.getElementById('deliktSearch').value = "";
+            render();
         }
     }
 
-    function getGebuehr(busse) {
-        if (busse <= 180) return 100; // 
-        if (busse <= 260) return 150; // 
-        if (busse <= 299) return 200; // 
-        if (busse < 400) return 250;  // 
-        if (busse < 500) return 300;  // 
-        if (busse < 1000) return 350; // 
-        if (busse < 2000) return 500; // 
-        if (busse < 5000) return 600; // 
-        return 700; // Gekürzt für Übersicht 
+    function removeDelikt(id) {
+        cart = cart.filter(x => x.id !== id);
+        render();
     }
 
-    function calculate() {
-        const busse = parseFloat(document.getElementById('fineAmount').value) || 0;
-        const tb = parseFloat(document.getElementById('tbAufnahme').value);
-        const sta = getGebuehr(busse);
+    function getStAGebuehr(totalBusse) {
+        if (totalBusse === 0) return 0;
+        if (totalBusse <= 180) return 100;
+        if (totalBusse <= 260) return 150;
+        if (totalBusse <= 299) return 200;
+        if (totalBusse < 400) return 250;
+        if (totalBusse < 500) return 300;
+        if (totalBusse < 1000) return 350;
+        if (totalBusse < 2000) return 500;
+        if (totalBusse < 5000) return 600;
+        if (totalBusse < 8000) return 700;
+        if (totalBusse < 10000) return 800;
+        return 1000;
+    }
+
+    function render() {
+        const listDiv = document.getElementById('activeList');
+        listDiv.innerHTML = cart.length === 0 ? "<small>Noch kein Delikt gewählt</small>" : "";
         
-        let extra = 0;
-        if (document.getElementById('tko').checked) extra += 60; // 
-        if (document.getElementById('waage').checked) extra += 25; // 
-        if (document.getElementById('video').checked) extra += 150; // 
+        let totalBusse = 0;
+        cart.forEach(item => {
+            totalBusse += item.b;
+            const row = document.createElement('div');
+            row.className = 'delikt-item';
+            row.innerHTML = `<span>${item.n}</span> <span><b>${item.b}.-</b> <button class="remove-btn" onclick="removeDelikt(${item.id})">X</button></span>`;
+            listDiv.appendChild(row);
+        });
 
-        const total = busse + tb + sta + extra;
-        document.getElementById('totalDisplay').innerText = total.toFixed(2);
-        document.getElementById('detailsDisplay').innerHTML = 
-            `Busse: ${busse.toFixed(2)} | Gebühr StA: ${sta.toFixed(2)} | TB: ${tb.toFixed(2)}` + 
-            (extra > 0 ? ` | Zusatz: ${extra.toFixed(2)}` : "");
+        const sta = getStAGebuehr(totalBusse);
+        const tb = parseFloat(document.getElementById('tbType').value);
+        let extra = 0;
+        if (document.getElementById('waage').checked) extra += 25;
+        if (document.getElementById('tko').checked) extra += 60;
+        if (document.getElementById('video').checked) extra += 150;
+
+        const gesamt = totalBusse + sta + tb + extra;
+        document.getElementById('totalVal').innerText = "CHF " + gesamt.toFixed(2);
+        document.getElementById('breakdown').innerHTML = 
+            `Bussen: ${totalBusse}.- | StA-Gebühr: ${sta}.- | TB: ${tb}.- | Zusatz: ${extra}.-`;
     }
-    
-    calculate();
 </script>
 
 </body>
