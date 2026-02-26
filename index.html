@@ -3,162 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVZ Uri 2026 | Multi-Kautionsrechner</title>
+    <title>SVZ URI | Kautions-App 2026</title>
     <style>
-        :root { --uri-red: #e63946; --uri-dark: #1d3557; --uri-blue: #457b9d; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 10px; }
-        .container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 100%; max-width: 650px; }
-        h1 { color: var(--uri-dark); text-align: center; border-bottom: 3px solid var(--uri-red); padding-bottom: 10px; margin-bottom: 20px; }
-        .search-section { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--uri-blue); }
-        input, select, button { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; margin-top: 5px; }
-        button { background: var(--uri-blue); color: white; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
-        button:hover { background: var(--uri-dark); }
-        
-        .list-section { margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
-        .delikt-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        .delikt-item:last-child { border-bottom: none; }
-        .remove-btn { width: auto; padding: 4px 8px; background: #dc3545; font-size: 0.75rem; margin: 0; }
+        :root {
+            --uri-yellow: #FFD700;
+            --uri-black: #1a1a1a;
+            --uri-red: #d90429;
+            --bg-grad: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
-        .fee-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .fee-card { background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 4px solid var(--uri-red); }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background: var(--bg-grad); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
 
-        .result-panel { background: var(--uri-dark); color: white; padding: 25px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .total-amount { font-size: 3rem; font-weight: bold; color: #a8dadc; display: block; }
-        .footer { font-size: 0.7rem; color: #666; text-align: center; margin-top: 15px; }
+        .app-container {
+            width: 100%;
+            max-width: 550px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-top: 8px solid var(--uri-black);
+        }
+
+        header {
+            background: var(--uri-black);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 { 
+            margin: 0; 
+            font-size: 1.4rem; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background: var(--uri-yellow);
+            color: black;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .content { padding: 25px; }
+
+        .form-group { margin-bottom: 20px; }
+
+        label { 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: #666; 
+            margin-bottom: 8px; 
+            display: block; 
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #edf2f4;
+            border-radius: 12px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        input:focus { border-color: var(--uri-black); outline: none; }
+
+        .btn-add {
+            background: var(--uri-black);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-add:active { transform: scale(0.98); }
+
+        .selection-list {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .item span { font-size: 0.9rem; font-weight: 500; }
+        .item .price { color: var(--uri-red); font-weight: bold; margin-left: auto; margin-right: 15px; }
+        .remove { color: #999; cursor: pointer; font-size: 1.2rem; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .opt-card {
+            background: #fff;
+            border: 2px solid #edf2f4;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .result-card {
+            background: var(--uri-black);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .result-card .label { font-size: 0.9rem; opacity: 0.7; }
+        .result-card .val { font-size: 3.2rem; font-weight: 800; display: block; margin: 10px 0; color: var(--uri-yellow); }
+        .result-card .sub { font-size: 0.8rem; border-top: 1px solid #444; padding-top: 15px; margin-top: 15px; display: block; }
+
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>⚖️ SVZ Uri: Multi-Kautionsrechner</h1>
+<div class="app-container">
+    <header>
+        <h1>STAFO URI 2026</h1>
+        <div class="badge">Kautions-Abnahme SVZ</div>
+    </header>
 
-    <div class="search-section">
-        <label>Delikt aus Liste wählen:</label>
-        <input type="text" id="deliktSearch" list="bussenliste" placeholder="Suchen (z.B. Gewicht, Reifen, Bremsen, ARV)...">
-        <datalist id="bussenliste"></datalist>
-        <button onclick="addDelikt()">+ Delikt hinzufügen</button>
-    </div>
-
-    <div class="list-section">
-        <label>Aktuelle Delikte am Fahrzeug:</label>
-        <div id="activeList">
-            </div>
-    </div>
-
-    <div class="fee-section">
-        <div class="fee-card">
-            <label>TB-Aufnahme</label>
-            <select id="tbType" onchange="render()">
-                <option value="110">Standard (110.-)</option>
-                <option value="360">Komplex (360.-)</option>
-            </select>
+    <div class="content">
+        <div class="form-group">
+            <label>DELIKT AUSWÄHLEN</label>
+            <input type="text" id="delInput" list="uriData" placeholder="Suche Delikt...">
+            <datalist id="uriData"></datalist>
+            <button class="btn-add" onclick="addItem()">+ ZU LISTE HINZUFÜGEN</button>
         </div>
-        <div class="fee-card">
-            <label>Optionen</label>
-            <div style="font-size: 0.8rem;">
-                <input type="checkbox" id="waage" onchange="render()"> Waage (+25.-)<br>
-                <input type="checkbox" id="tko" onchange="render()"> TKO (+60.-)<br>
-                <input type="checkbox" id="video" onchange="render()"> Video (+150.-)
+
+        <div class="selection-list" id="activeItems">
             </div>
+
+        <div class="options-grid">
+            <div class="opt-card">
+                <label>TB-AUFNAHME</label>
+                <select id="tbSelect" onchange="calc()">
+                    <option value="110">Standard (110.-)</option>
+                    <option value="360">Komplex (360.-)</option>
+                </select>
+            </div>
+            <div class="opt-card">
+                <label>ZUSATZKOSTEN</label>
+                <div style="line-height: 1.8;">
+                    <input type="checkbox" id="waage" onchange="calc()"> Waage (+25.-)<br>
+                    <input type="checkbox" id="tko" onchange="calc()"> TKO (+60.-)<br>
+                    <input type="checkbox" id="video" onchange="calc()"> Video (+150.-)
+                </div>
+            </div>
+        </div>
+
+        <div class="result-card">
+            <span class="label">TOTAL DEPOSITION</span>
+            <span class="val" id="totalVal">CHF 0.00</span>
+            <span class="sub" id="breakdown">Busse: 0 | Gebühr: 0 | TB: 110</span>
         </div>
     </div>
 
-    <div class="result-panel">
-        <span>Total Kaution (Deposition)</span>
-        <span class="total-amount" id="totalVal">CHF 0.00</span>
-        <div id="breakdown" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;"></div>
+    <div class="footer-note">
+        Strafmassempfehlungen Staatsanwaltschaft Uri<br>
+        Stand: 12.01.2026 | Gültig ab: 01.01.2026
     </div>
-
-    <p class="footer">Strafmassempfehlungen Uri 2026. <br>Bei Kautionen > 5'000.- Staatsanwaltschaft informieren!</p>
 </div>
 
 <script>
-    // Originaldaten aus dem Dokument 2026
-    const db = [
-        { n: "Gewicht: LW bis 100kg Überlast", b: 100 },
-        { n: "Gewicht: LW > 100kg bis 5% (max 1t)", b: 250 },
-        { n: "Gewicht: LW > 5% oder > 1t (Mindestbusse)", b: 300 },
-        { n: "Achslast: bis 100kg Überlast", b: 100 },
-        { n: "Reifen: Profil unter 1.6mm (pro Reifen)", b: 100 },
-        { n: "Reifen: Gewebe/Karkasse sichtbar (LW)", b: 500 },
-        { n: "Bremse: LW ohne Funktion (pro Rad)", b: 1000 },
-        { n: "Bremse: LW ungenügend < 2/3 (pro Rad)", b: 380 },
-        { n: "Bremse: LW ungenügend > 2/3 (pro Rad)", b: 150 },
-        { n: "ARV1: Lenkzeit überschritten (pro Std)", b: 100 },
-        { n: "ARV1: Ruhezeit unterschritten (pro Std)", b: 100 },
-        { n: "ARV1: Fahren ohne Fahrerkarte/Einlageblatt", b: 500 },
-        { n: "Ladung: Ungenügend gesichert (LW Standard)", b: 250 },
-        { n: "Ladung: Ungenügend gesichert (Gefährdungspot.)", b: 900 },
-        { n: "Nachtfahrverbot (bis 1 Std)", b: 100 },
-        { n: "Sonntagsfahrverbot", b: 400 },
-        { n: "Technik: Bremsscheibe gerissen (LW)", b: 500 },
-        { n: "Technik: Fahrtschreiber Manipulation", b: 1000 }
+    // Offizielle Daten Uri 2026
+    const data = [
+        {n: "Gewicht: LW ≤ 100kg Überlast", b: 100}, //
+        {n: "Gewicht: LW > 100kg & ≤ 5% (max 1t)", b: 250}, //
+        {n: "Gewicht: Alle Fz ≥ 5% (Min.Busse)", b: 300}, //
+        {n: "Achslast: ≤ 100kg Überlast", b: 100}, //
+        {n: "Reifen: Profil < 1.6mm (pro Stk)", b: 100}, //
+        {n: "Reifen: Karkasse sichtbar (pro Stk)", b: 500}, //
+        {n: "Bremse: LW ohne Funktion (pro Rad)", b: 1000}, //
+        {n: "Bremse: LW ungenügend < 2/3 (pro Rad)", b: 380}, //
+        {n: "ARV1: Lenkzeit überschritten (pro Std)", b: 100}, //
+        {n: "ARV1: Ruhezeit unterschritten (pro Std)", b: 100}, //
+        {n: "ARV1: Keine Fahrerkarte/Einlageblatt", b: 500}, //
+        {n: "Ladung: Ungenügend gesichert (Standard)", b: 250}, //
+        {n: "Ladung: Grobes Gefährdungspotenzial", b: 900}, //
+        {n: "Nachtfahrverbot (bis 1 Std)", b: 100}, //
+        {n: "Sonntagsfahrverbot", b: 400}, //
+        {n: "Manipulation Fahrtschreiber (Min.)", b: 1000} //
     ];
 
     let cart = [];
 
-    // Liste initialisieren
-    const datalist = document.getElementById('bussenliste');
-    db.forEach(item => {
-        let opt = document.createElement('option');
-        opt.value = item.n;
-        datalist.appendChild(opt);
+    // Liste füllen
+    const dl = document.getElementById('uriData');
+    data.forEach(d => {
+        let o = document.createElement('option');
+        o.value = d.n;
+        dl.appendChild(o);
     });
 
-    function addDelikt() {
-        const val = document.getElementById('deliktSearch').value;
-        const entry = db.find(x => x.n === val);
+    function addItem() {
+        const val = document.getElementById('delInput').value;
+        const entry = data.find(x => x.n === val);
         if (entry) {
             cart.push({...entry, id: Date.now()});
-            document.getElementById('deliktSearch').value = "";
-            render();
+            document.getElementById('delInput').value = "";
+            calc();
         }
     }
 
-    function removeDelikt(id) {
+    function removeItem(id) {
         cart = cart.filter(x => x.id !== id);
-        render();
+        calc();
     }
 
     function getStAGebuehr(totalBusse) {
         if (totalBusse === 0) return 0;
-        if (totalBusse <= 180) return 100;
-        if (totalBusse <= 260) return 150;
-        if (totalBusse <= 299) return 200;
-        if (totalBusse < 400) return 250;
-        if (totalBusse < 500) return 300;
-        if (totalBusse < 1000) return 350;
-        if (totalBusse < 2000) return 500;
-        if (totalBusse < 5000) return 600;
-        if (totalBusse < 8000) return 700;
-        if (totalBusse < 10000) return 800;
-        return 1000;
+        if (totalBusse <= 180) return 100; //
+        if (totalBusse <= 260) return 150; //
+        if (totalBusse <= 299) return 200; //
+        if (totalBusse < 400) return 250;  //
+        if (totalBusse < 500) return 300;  //
+        if (totalBusse < 1000) return 350; //
+        if (totalBusse < 2000) return 500; //
+        if (totalBusse < 5000) return 600; //
+        return 700; //
     }
 
-    function render() {
-        const listDiv = document.getElementById('activeList');
-        listDiv.innerHTML = cart.length === 0 ? "<small>Noch kein Delikt gewählt</small>" : "";
-        
+    function calc() {
+        const list = document.getElementById('activeItems');
+        list.innerHTML = "";
         let totalBusse = 0;
-        cart.forEach(item => {
-            totalBusse += item.b;
-            const row = document.createElement('div');
-            row.className = 'delikt-item';
-            row.innerHTML = `<span>${item.n}</span> <span><b>${item.b}.-</b> <button class="remove-btn" onclick="removeDelikt(${item.id})">X</button></span>`;
-            listDiv.appendChild(row);
+
+        cart.forEach(i => {
+            totalBusse += i.b;
+            list.innerHTML += `<div class="item"><span>${i.n}</span><span class="price">${i.b}.-</span><span class="remove" onclick="removeItem(${i.id})">×</span></div>`;
         });
 
         const sta = getStAGebuehr(totalBusse);
-        const tb = parseFloat(document.getElementById('tbType').value);
+        const tb = parseFloat(document.getElementById('tbSelect').value);
         let extra = 0;
-        if (document.getElementById('waage').checked) extra += 25;
-        if (document.getElementById('tko').checked) extra += 60;
-        if (document.getElementById('video').checked) extra += 150;
+        if (document.getElementById('waage').checked) extra += 25; //
+        if (document.getElementById('tko').checked) extra += 60; //
+        if (document.getElementById('video').checked) extra += 150; //
 
         const gesamt = totalBusse + sta + tb + extra;
         document.getElementById('totalVal').innerText = "CHF " + gesamt.toFixed(2);
-        document.getElementById('breakdown').innerHTML = 
-            `Bussen: ${totalBusse}.- | StA-Gebühr: ${sta}.- | TB: ${tb}.- | Zusatz: ${extra}.-`;
+        document.getElementById('breakdown').innerHTML = `Bussen: ${totalBusse}.- | Gebühr StA: ${sta}.- | TB: ${tb}.- | Zusatz: ${extra}.-`;
     }
 </script>
 
