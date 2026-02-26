@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaution-Rechner SVZ Uri 2026</title>
+    <style>
+        :root { --uri-red: #e63946; --uri-dark: #1d3557; --uri-bg: #f1faee; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--uri-bg); display: flex; justify-content: center; padding: 10px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h1 { color: var(--uri-dark); text-align: center; border-bottom: 3px solid var(--uri-red); padding-bottom: 10px; font-size: 1.2rem; }
+        .section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--uri-dark); }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        select, input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; background: #fff; padding: 8px; border-radius: 4px; }
+        .checkbox-group input { width: auto; margin: 0; }
+        .result-panel { background: var(--uri-dark); color: white; padding: 20px; border-radius: 8px; text-align: center; }
+        .total-amount { font-size: 2.5rem; font-weight: bold; color: #f1faee; display: block; }
+        .breakdown { font-size: 0.85rem; text-align: left; margin-top: 10px; border-top: 1px solid #457b9d; padding-top: 10px; }
+        .hint { font-size: 0.75rem; color: #666; font-style: italic; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>⚖️ Kautions-Finder Uri 2026</h1>
+
+    <div class="section">
+        <label>Delikt / Busse (CHF)</label>
+        <input type="number" id="fineAmount" placeholder="Bussenbetrag eingeben..." oninput="calculate()">
+    </div>
+
+    <div class="section">
+        <label>Zusatzgebühren</label>
+        <div class="checkbox-group">
+            <input type="checkbox" id="tko" onchange="calculate()">
+            <label for="tko">TKO Gebühr (+ CHF 60)</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="waage" onchange="calculate()">
+            <label for="waage">Waage Gebühr (+ CHF 25)</label>
+        </div>
+    </div>
+
+    <div class="result-panel">
+        <span>Total Kaution (CHF)</span>
+        <span class="total-amount" id="totalDisplay">0.00</span>
+        
+        <div class="breakdown" id="breakdownDisplay">
+            Busse: 0.00<br>
+            Gebühr StA: 0.00<br>
+            TB-Aufnahme: 110.00
+        </div>
+    </div>
+
+    <div class="hint">
+        Stand: 01.01.2026. Beinhaltet Gebühren StA/Polizei sowie Tatbestandsaufnahme (CHF 110). [cite: 1226, 1228]
+    </div>
+</div>
+
+<script>
+    function getGebuehr(busse) {
+        if (busse <= 180) return 100;
+        if (busse <= 260) return 150;
+        if (busse <= 299) return 200;
+        if (busse < 400) return 250;
+        if (busse < 500) return 300;
+        if (busse < 1000) return 350;
+        if (busse < 2000) return 500;
+        if (busse < 5000) return 600;
+        if (busse < 8000) return 700;
+        if (busse < 10000) return 800;
+        return 1000;
+    }
+
+    function calculate() {
+        const busse = parseFloat(document.getElementById('fineAmount').value) || 0;
+        const tbAufnahme = 110; // Standard TB-Aufnahme 
+        const staGebuehr = getGebuehr(busse); // Gebühr nach Tabelle 
+        
+        let zusatz = 0;
+        let zusatzText = "";
+        
+        if (document.getElementById('tko').checked) {
+            zusatz += 60;
+            zusatzText += " + TKO: 60.00";
+        }
+        if (document.getElementById('waage').checked) {
+            zusatz += 25;
+            zusatzText += " + Waage: 25.00";
+        }
+
+        const total = busse + staGebuehr + tbAufnahme + zusatz;
+
+        document.getElementById('totalDisplay').innerText = total.toFixed(2);
+        document.getElementById('breakdownDisplay').innerHTML = 
+            `Busse: ${busse.toFixed(2)}<br>` +
+            `Gebühr StA: ${staGebuehr.toFixed(2)}<br>` +
+            `TB-Aufnahme: ${tbAufnahme.toFixed(2)}${zusatzText}`;
+    }
+</script>
+
+</body>
+</html>
