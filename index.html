@@ -3,258 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URI SVZ Master 2026 | Kautions-System</title>
+    <title>SVZ URI Master 2026 | OB & Kautions-System</title>
     <style>
         :root {
             --uri-yellow: #FFD700;
             --uri-black: #1a1a1a;
             --uri-red: #d90429;
-            --uri-blue: #0056b3;
-            --bg-grad: linear-gradient(135deg, #f1f3f5 0%, #cfd4da 100%);
-            --shadow: 0 8px 30px rgba(0,0,0,0.15);
+            --bg-grad: linear-gradient(135deg, #f8f9fa 0%, #cfd4da 100%);
         }
-
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-grad); margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 650px; background: white; border-radius: 16px; box-shadow: var(--shadow); border-top: 10px solid var(--uri-black); overflow: hidden; }
-        
+        body { font-family: 'Inter', sans-serif; background: var(--bg-grad); margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 750px; background: white; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border-top: 10px solid var(--uri-black); overflow: hidden; }
         header { background: var(--uri-black); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--uri-yellow); }
-        header h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
-        .badge { background: var(--uri-yellow); color: black; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; margin-top: 5px; display: inline-block; }
-
         .content { padding: 20px; }
-        .section-title { font-size: 0.75rem; font-weight: 800; color: #888; text-transform: uppercase; margin: 15px 0 8px 0; display: block; }
+        .search-area { background: #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ced4da; }
+        input[type="text"] { width: 100%; padding: 14px; border: 2px solid #ced4da; border-radius: 10px; font-size: 1rem; }
+        .btn-add { background: var(--uri-black); color: white; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        .type-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; margin-right: 8px; }
+        .badge-ob { background: #27ae60; color: white; }
+        .badge-ord { background: #2980b9; color: white; }
 
-        .search-box { position: relative; margin-bottom: 20px; }
-        input[type="text"] { width: 100%; padding: 14px; border: 2px solid #dee2e6; border-radius: 10px; font-size: 1rem; box-sizing: border-box; background: #fdfdfd; }
-        .add-btn { background: var(--uri-black); color: white; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 8px; transition: 0.2s; }
-        .add-btn:hover { background: #333; }
-
-        .cart { border: 1px solid #eee; border-radius: 10px; padding: 10px; min-height: 50px; background: #fafafa; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem; background: white; margin-bottom: 5px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .cart-item:last-child { border-bottom: none; }
-        .cart-item .p { font-weight: bold; color: var(--uri-red); margin-left: auto; padding-right: 15px; }
-        .remove { cursor: pointer; color: #adb5bd; font-weight: bold; font-size: 1.1rem; }
-        .remove:hover { color: var(--uri-red); }
-
+        .cart-list { border: 1px solid #dee2e6; border-radius: 10px; background: #fff; margin-top: 10px; }
+        .cart-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; align-items: center; }
+        .cart-item b { color: var(--uri-red); }
+        
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .config-card { background: #f1f3f5; padding: 12px; border-radius: 10px; }
-        select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; background: white; }
-
-        .result-panel { background: var(--uri-black); color: white; padding: 25px; border-radius: 15px; margin-top: 25px; text-align: center; }
-        .total-val { font-size: 3.2rem; font-weight: 900; color: var(--uri-yellow); display: block; margin: 5px 0; }
-        .breakdown { font-size: 0.75rem; color: #aaa; border-top: 1px solid #333; padding-top: 15px; margin-top: 15px; }
-
-        .category-tabs { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
-        .tab { background: #e9ecef; padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; white-space: nowrap; font-weight: bold; color: #495057; cursor: pointer; }
-        .tab:hover { background: #dee2e6; }
-
-        .footer { text-align: center; font-size: 0.65rem; color: #adb5bd; padding: 20px; line-height: 1.5; }
+        .config-box { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #ddd; }
+        
+        .result-panel { background: var(--uri-black); color: white; padding: 30px; border-radius: 15px; margin-top: 25px; text-align: center; }
+        .total-val { font-size: 3.5rem; font-weight: 900; color: var(--uri-yellow); display: block; }
+        
+        .footer { font-size: 0.7rem; text-align: center; color: #777; padding: 20px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <header>
-        <h1>STA Strafmassempfehlungen URI</h1>
-        <div class="badge">Vollversion Schwerverkehr 2026</div>
+        <h1 style="margin:0; font-size:1.3rem;">SVZ URI Master 2026</h1>
+        <div style="font-size:0.75rem; color:var(--uri-yellow); margin-top:5px; font-weight:bold;">OBV-LISTE & STRAFMASSEMPFEHLUNGEN</div>
     </header>
 
     <div class="content">
-        <span class="section-title">Schnell-Kategorien</span>
-        <div class="category-tabs">
-            <div class="tab" onclick="setSearch('Gewicht')">⚖️ Gewicht</div>
-            <div class="tab" onclick="setSearch('Bremse')">🛑 Bremsen</div>
-            <div class="tab" onclick="setSearch('Reifen')">🛞 Reifen</div>
-            <div class="tab" onclick="setSearch('ARV1')">🕒 ARV 1</div>
-            <div class="tab" onclick="setSearch('Ladung')">📦 Ladung</div>
-            <div class="tab" onclick="setSearch('ADR')">☣️ ADR</div>
-            <div class="tab" onclick="setSearch('Sicht')">👓 Sicht</div>
+        <div class="search-area">
+            <label style="font-weight:bold; font-size:0.8rem; color:#444; margin-bottom:8px; display:block;">DELIKT-SUCHE (OB & ORDENTLICH)</label>
+            <input type="text" id="delSearch" list="fullDB" placeholder="z.B. Reifen, Gewicht, Licht, Telefon, ARV...">
+            <datalist id="fullDB"></datalist>
+            <button class="btn-add" onclick="addItem()">+ TATBESTAND HINZUFÜGEN</button>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="delSearch" list="dbList" placeholder="Nach Delikt suchen (z.B. Reifen LW)...">
-            <datalist id="dbList"></datalist>
-            <button class="add-btn" onclick="add()">+ DELIKT HINZUFÜGEN</button>
-        </div>
-
-        <span class="section-title">Aufgenommene Tatbestände</span>
-        <div class="cart" id="cartList">
-            <div style="text-align:center; color:#adb5bd; font-size:0.8rem; padding:10px;">Keine Delikte ausgewählt</div>
+        <div class="cart-list" id="cartDisplay">
+            <div style="padding:20px; text-align:center; color:#999;">Keine Tatbestände erfasst</div>
         </div>
 
         <div class="config-grid">
-            <div class="config-card">
-                <label class="section-title" style="margin:0 0 5px 0">Verfahren</label>
-                <select id="tbType" onchange="calc()">
-                    <option value="110">Übertretung (TB 110.-)</option>
-                    <option value="360">Komplex/Manipulation (TB 360.-)</option>
+            <div class="config-box">
+                <label style="font-weight:bold; font-size:0.75rem;">VERFAHREN (nur für Ordentlich)</label>
+                <select id="tbVal" onchange="render()">
+                    <option value="110">Standard TB (110.-)</option>
+                    <option value="360">Komplex TB (360.-)</option>
                 </select>
             </div>
-            <div class="config-card">
-                <label class="section-title" style="margin:0 0 5px 0">Zusatzgebühren</label>
-                <div style="font-size:0.75rem;">
-                    <input type="checkbox" id="waage" onchange="calc()"> Waage (+25.-)<br>
-                    <input type="checkbox" id="tko" onchange="calc()"> TKO (+60.-)<br>
-                    <input type="checkbox" id="video" onchange="calc()"> Video/Audio (+150.-)
+            <div class="config-box">
+                <label style="font-weight:bold; font-size:0.75rem;">ZUSÄTZE (nur für Ordentlich)</label><br>
+                <div style="font-size:0.8rem; margin-top:5px;">
+                    <input type="checkbox" id="waage" onchange="render()"> Waage (+25.-)<br>
+                    <input type="checkbox" id="tko" onchange="render()"> TKO (+60.-)<br>
+                    <input type="checkbox" id="video" onchange="render()"> Video (+150.-)
                 </div>
             </div>
         </div>
 
         <div class="result-panel">
-            <span style="font-size:0.8rem; opacity:0.8; letter-spacing:1px;">GESAMT-KAUTION</span>
-            <span class="total-val" id="totalVal">CHF 0.00</span>
-            <div class="breakdown" id="breakdownDisplay">
-                Bussen: 0 | Gebühr StA: 0 | TB-Aufnahme: 110
-            </div>
+            <span style="font-size:0.85rem; opacity:0.8;">GESAMTBETRAG (CHF)</span>
+            <span class="total-val" id="totalVal">0.00</span>
+            <div id="breakdown" style="font-size:0.8rem; color:#aaa; margin-top:10px;"></div>
         </div>
     </div>
 
     <div class="footer">
-        Gemäss Strafmassempfehlungen Kanton Uri für Übertretungen (Art. 90 ff. SVG)[cite: 4, 9].<br>
-        Gültig ab 01.01.2026. Stand 12.01.2026[cite: 15, 16].
+        Basierend auf OBV Anhang 1 und Strafmassempfehlungen Uri 2026[cite: 7, 15, 16].<br>
+        Bei reinen OB-Fällen entfallen Gebühren und TB-Aufnahme.
     </div>
 </div>
 
 <script>
-    // Vollständige Extraktion der LW-relevanten Daten aus dem PDF [cite: 26-58]
-    const uriDatabase = [
-        // GEWICHT & MASSE [cite: 30, 41, 42]
-        { n: "Gewicht: LW ≤ 100kg Überlast (OBV 300.1.c)", b: 100 },
-        { n: "Gewicht: LW > 100kg bis 5% (max 1000kg) (OBV 300.1.c)", b: 250 },
-        { n: "Gewicht: LW ≥ 5% oder > 1000kg (Min.Busse) (SVG 96/1/c)", b: 300 },
-        { n: "Achslast: LW > 2% bis 5% (OBV 300.3.a)", b: 40 },
-        { n: "Achslast: LW > 5% (OBV 300.3.b)", b: 100 },
-        { n: "Überbreite: LW ≤ 10cm (SVG 93/2)", b: 150 },
-        { n: "Überbreite: LW 11-15cm (SVG 93/2)", b: 300 },
-        { n: "Überbreite: LW 16-20cm (SVG 93/2)", b: 600 },
-        { n: "Überlänge: LW ≤ 10cm (SVG 93/2)", b: 150 },
-        { n: "Überhöhe: LW ≤ 10cm (SVG 93/2)", b: 150 },
+    const database = [
+        // --- ORDNUNGSBUSSEN (OBV) ---
+        { n: "OB 303.1: Geschw. +1-5 km/h (I/A/AB)", b: 40, t: "ob" },
+        { n: "OB 303.2: Geschw. +6-10 km/h (I/A/AB)", b: 120, t: "ob" },
+        { n: "OB 311: Telefonieren ohne Freisprechanlage", b: 100, t: "ob" },
+        { n: "OB 314.1: Nichtbenützen rechter Fahrstreifen (AB)", b: 60, t: "ob" },
+        { n: "OB 330: Kontrollschild nicht vorschriftsgemäss", b: 60, t: "ob" },
+        { n: "OB 332.a: Nachtfahrverbot bis 1 Std", b: 100, t: "ob" },
+        { n: "OB 332.b: Nachtfahrverbot bis 2 Std", b: 200, t: "ob" },
+        { n: "OB 402.1: Reifen unter 1.6 mm Profil (pro Rad)", b: 100, t: "ob" },
+        { n: "OB 404: Kontrollschild fehlt am Fahrzeug", b: 140, t: "ob" },
+        { n: "OB 300.1.a: Gewicht: Überlast bis 100 kg", b: 100, t: "ob" },
+        { n: "OB 300.1.b: Gewicht: bis 3.5t / >100 kg / ≤5%", b: 200, t: "ob" },
+        { n: "OB 300.1.c: Gewicht: >3.5t / >100 kg / ≤5% (max 1t)", b: 250, t: "ob" },
+        { n: "OB 300.3.a: Achslast: >2% bis ≤5%", b: 40, t: "ob" },
+        { n: "OB 300.3.b: Achslast: >5%", b: 100, t: "ob" },
+        { n: "OB 309.1: Rotlicht missachtet (einfach)", b: 250, t: "ob" },
+        { n: "OB 321.1: Richtungsanzeiger nicht betätigt", b: 100, t: "ob" },
+        { n: "OB 323.1: Fahren ohne Licht tagsüber", b: 40, t: "ob" },
 
-        // TECHNIK: BREMSEN (LW-Ansatz 150%) [cite: 26, 27]
-        { n: "Bremse: Betriebsbr. ohne Funktion (1 Rad) (SVG 93/2)", b: 1000 },
-        { n: "Bremse: Betriebsbr. ohne Funktion (2 Räder) (SVG 93/2)", b: 2000 },
-        { n: "Bremse: Betriebsbr. ungenügend < 2/3 (1 Rad) (SVG 93/2)", b: 380 },
-        { n: "Bremse: Betriebsbr. ungenügend > 2/3 (1 Rad) (SVG 93/2)", b: 150 },
-        { n: "Bremse: Feststellbr. ohne Funktion (1 Achse) (SVG 93/2)", b: 300 },
-        { n: "Bremse: Bremsscheibe gerissen (pro Rad) (SVG 93/2)", b: 500 },
-        { n: "Bremse: Bremsleitung nicht angeschlossen (SVG 93/2)", b: 2000 },
-
-        // TECHNIK: REIFEN & RÄDER [cite: 27, 28, 31]
-        { n: "Reifen: Profil unter 1.6mm (pro Rad) (OBV 402.1)", b: 100 },
-        { n: "Reifen: Gewebe/Karkasse sichtbar (pro Rad) (SVG 93/2)", b: 500 },
-        { n: "Reifen: Drucklos / beschädigt (pro Rad) (SVG 93/2)", b: 300 },
-        { n: "Räder: Radbefestigung lose/gebrochen (LW) (SVG 93/2)", b: 500 },
-
-        // TECHNIK: CHASSIS & UMWElt [cite: 28, 30, 31]
-        { n: "Technik: Massive Öl-/Treibstoffleckage (SVG 93/2)", b: 500 },
-        { n: "Technik: iDFS/G2V2 nicht umgerüstet (VRV 57/1)", b: 200 },
-        { n: "Technik: Fahrtschreiber Manipulation (Sensoren/RAG)", b: 1000 },
-        { n: "Technik: Tacho-Kalibrierung abgelaufen (SVG 93/2)", b: 200 },
-        { n: "Technik: Unerlaubte Leistungssteigerung (Chip)", b: 1000 },
-
-        // ARV 1 (SCHWERVERKEHR) [cite: 48, 49, 50, 52, 54, 56]
-        { n: "ARV1: Tägliche Lenkzeit überschritten (pro Std)", b: 100 },
-        { n: "ARV1: Wöchentliche Lenkzeit überschritten (pro Std)", b: 100 },
-        { n: "ARV1: Ruhezeit unterschritten (pro Std)", b: 100 },
-        { n: "ARV1: Tägliche Ruhezeit < 9 Std (pro Std)", b: 100 },
-        { n: "ARV1: Regelm. Wochenruhezeit in Kabine (pro Mal)", b: 350 },
-        { n: "ARV1: Fehlendes Einlageblatt/Fahrerkarte (pro Tag)", b: 500 },
-        { n: "ARV1: Fremde Fahrerkarte benutzt (SVG 95/1/b)", b: 500 },
-        { n: "ARV1: Fahrerkarte abgelaufen (SVG 96/1)", b: 500 },
-        { n: "ARV1: Rückkehrpflicht nicht ermöglicht (Arbeitgeber)", b: 350 },
-
-        // LADUNG & ADR [cite: 31, 32]
-        { n: "Ladung: Ungenügend gesichert (LW Basis) (SVG 30/2)", b: 250 },
-        { n: "Ladung: Ungenügend gesichert (Gefährdung) (SVG 30/2)", b: 900 },
-        { n: "Ladung: Seitlich überragend > 10cm (VRV 73/2)", b: 450 },
-        { n: "Ladung: ADR Sicherung mangelhaft < 1500daN", b: 600 },
-        { n: "Ladung: ADR Sicherung mangelhaft > 1500daN", b: 900 },
-        { n: "Ladung: ADR Sicherung extreme Gefahr", b: 2000 },
-
-        // SICHT & BELEUCHTUNG [cite: 29, 30]
-        { n: "Sicht: Frontscheibe stark beschädigt (SVG 93/2)", b: 500 },
-        { n: "Sicht: Guckloch-Fahrt (vereist/beschlagen) (SVG 90/2)", b: 600 },
-        { n: "Licht: Komplettes System fehlt/defekt (LW) (SVG 93/2)", b: 450 },
-        { n: "Licht: Einseitig unbeleuchtet (Einäuger) (LW) (SVG 93/2)", b: 150 },
-
-        // FAHRVERBOTE [cite: 40]
-        { n: "Verbot: Nachtfahrverbot bis 1 Std (OBV 332.a)", b: 100 },
-        { n: "Verbot: Sonntagsfahrverbot missachtet (VRV 91)", b: 400 }
+        // --- ORDENTLICHE VERZEIGUNGEN (URI 2026) ---
+        { n: "ORD: Gewicht: LW > 5% oder > 1000 kg", b: 300, t: "ord" },
+        { n: "ORD: Bremse: Betriebsbr. ohne Funktion (1 Rad/LW)", b: 1000, t: "ord" },
+        { n: "ORD: Bremse: Betriebsbr. ungenügend < 2/3 (1 Rad/LW)", b: 380, t: "ord" },
+        { n: "ORD: Reifen: Gewebe/Karkasse sichtbar (pro Rad)", b: 500, t: "ord" },
+        { n: "ORD: ARV1: Lenkzeit überschritten (pro Std)", b: 100, t: "ord" },
+        { n: "ORD: ARV1: Ruhezeit unterschritten (pro Std)", b: 100, t: "ord" },
+        { n: "ORD: ARV1: Fahren ohne Fahrerkarte/Einlageblatt", b: 500, t: "ord" },
+        { n: "ORD: Ladung: Ungenügend gesichert (Basis)", b: 250, t: "ord" },
+        { n: "ORD: Ladung: Grobes Gefährdungspotenzial", b: 900, t: "ord" },
+        { n: "ORD: Manipulation Abgasreinigung (AdBlue)", b: 1000, t: "ord" },
+        { n: "ORD: Manipulation Fahrtschreiber (RAG/Sensoren)", b: 1000, t: "ord" },
+        { n: "ORD: ADR Sicherung mangelhaft > 1500 daN", b: 900, t: "ord" }
     ];
 
-    let currentCart = [];
+    let cart = [];
+    const dl = document.getElementById('fullDB');
+    database.forEach(d => { let o = document.createElement('option'); o.value = d.n; dl.appendChild(o); });
 
-    // Init datalist
-    const datalist = document.getElementById('dbList');
-    uriDatabase.sort((a,b) => a.n.localeCompare(b.n)).forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item.n;
-        datalist.appendChild(opt);
-    });
-
-    function setSearch(term) {
-        document.getElementById('delSearch').value = term;
-        document.getElementById('delSearch').focus();
-    }
-
-    function add() {
+    function addItem() {
         const val = document.getElementById('delSearch').value;
-        const entry = uriDatabase.find(x => x.n === val);
+        const entry = database.find(x => x.n === val);
         if (entry) {
-            currentCart.push({...entry, id: Date.now()});
+            cart.push({...entry, id: Date.now()});
             document.getElementById('delSearch').value = "";
-            calc();
+            render();
         }
     }
 
-    function remove(id) {
-        currentCart = currentCart.filter(x => x.id !== id);
-        calc();
+    function removeItem(id) {
+        cart = cart.filter(x => x.id !== id);
+        render();
     }
 
-    // Gebührentabelle StA URI [cite: 9, 198]
     function getStAGebuehr(b) {
         if (b === 0) return 0;
-        if (b <= 180) return 100;
-        if (b <= 260) return 150;
-        if (b <= 299) return 200;
-        if (b < 400) return 250;
-        if (b < 500) return 300;
-        if (b < 1000) return 350;
-        if (b < 2000) return 500;
-        if (b < 5000) return 600;
-        if (b < 8000) return 700;
-        if (b < 10000) return 800;
-        return 1000;
+        if (b <= 180) return 100; if (b <= 260) return 150; if (b <= 299) return 200;
+        if (b < 400) return 250; if (b < 500) return 300; if (b < 1000) return 350;
+        if (b < 2000) return 500; if (b < 5000) return 600; return 700;
     }
 
-    function calc() {
-        const listDiv = document.getElementById('cartList');
-        listDiv.innerHTML = currentCart.length === 0 ? '<div style="text-align:center; color:#adb5bd; font-size:0.8rem; padding:10px;">Keine Delikte ausgewählt</div>' : "";
+    function render() {
+        const display = document.getElementById('cartDisplay');
+        display.innerHTML = cart.length === 0 ? '<div style="padding:20px; text-align:center; color:#999;">Keine Tatbestände erfasst</div>' : "";
         
         let sumBussen = 0;
-        currentCart.forEach(item => {
-            sumBussen += item.b;
+        let hasOrdentlich = false;
+
+        cart.forEach(i => {
+            sumBussen += i.b;
+            if (i.t === "ord") hasOrdentlich = true;
             const row = document.createElement('div');
             row.className = 'cart-item';
-            row.innerHTML = `<span>${item.n}</span><span class="p">${item.b}.-</span><span class="remove" onclick="remove(${item.id})">×</span>`;
-            listDiv.appendChild(row);
+            row.innerHTML = `<div><span class="type-badge badge-${i.t}">${i.t}</span>${i.n}</div> <span><b>${i.b}.-</b> <span style="cursor:pointer; color:#ccc; margin-left:10px;" onclick="removeItem(${i.id})">×</span></span>`;
+            display.appendChild(row);
         });
 
-        const sta = getStAGebuehr(sumBussen);
-        const tb = parseFloat(document.getElementById('tbType').value);
-        let extras = 0;
-        if (document.getElementById('waage').checked) extras += 25;
-        if (document.getElementById('tko').checked) extras += 60;
-        if (document.getElementById('video').checked) extras += 150;
+        // Gebührenlogik: Nur wenn mindestens ein ordentliches Delikt dabei ist
+        const sta = hasOrdentlich ? getStAGebuehr(sumBussen) : 0;
+        const tb = hasOrdentlich ? parseFloat(document.getElementById('tbVal').value) : 0;
+        let extra = 0;
+        if (hasOrdentlich) {
+            if (document.getElementById('waage').checked) extra += 25;
+            if (document.getElementById('tko').checked) extra += 60;
+            if (document.getElementById('video').checked) extra += 150;
+        }
 
-        const total = sumBussen + sta + tb + extras;
-        document.getElementById('totalVal').innerText = "CHF " + total.toFixed(2);
-        document.getElementById('breakdownDisplay').innerHTML = 
-            `Bussen: ${sumBussen}.- | Gebühr StA: ${sta}.- | TB-Aufnahme: ${tb}.-` + 
-            (extras > 0 ? ` | Zusatz: ${extras}.-` : "");
+        const total = sumBussen + sta + tb + extra;
+        document.getElementById('totalVal').innerText = total.toFixed(2);
+        
+        if (hasOrdentlich) {
+            document.getElementById('breakdown').innerHTML = `Bussen: ${sumBussen}.- | Gebühr StA: ${sta}.- | TB: ${tb}.- | Zusatz: ${extra}.-`;
+        } else {
+            document.getElementById('breakdown').innerHTML = cart.length > 0 ? "Rein kumulierte Ordnungsbussen (Keine Gebühren)" : "";
+        }
     }
 </script>
-
 </body>
 </html>
